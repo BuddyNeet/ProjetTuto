@@ -89,6 +89,19 @@ Lecteur *InscriptionLec(Lecteur **tLec, int *n, int *tmax){
 			return tLec;
 		}
 	}
+	printf("Saisir l'inscription Lecteur: \n");
+	scanf("%s %s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville, &l.rue);
+	printf("Saisir emprunt du lecteur: (Si existant écrire Y sinon écrire N ) \n");
+	scanf("%c", &res);
+	if (res  == 'N'){
+		*l.liste->cote = ' ';
+		*l.liste->date = ' ';
+	} else {
+	printf("Saisir sous forme 'CXXX DD-MM-YYYY'\n");
+	scanf("%s %s", &l.liste->cote, &l.liste->date);
+	*n += 1;
+	tLec = l;
+	return tLec;
 }
 
 /*Fonction appellante*/
