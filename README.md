@@ -8,8 +8,8 @@
 * BARLAND Estéban
 
 ## A faire:
-*Débug Instruction
-*Suppresion Lecteur
-*Enregistrement d'un nouvel emprunt
-*liste des lecteurs par ordre alphabétique(nom+prénom)
-*Sauvegarde des fichiers ( fic binaire )
+* Débug Instruction
+* Suppresion Lecteur
+* Enregistrement d'un nouvel emprunt
+* liste des lecteurs par ordre alphabétique(nom+prénom)
+* Sauvegarde des fichiers ( fic binaire )
