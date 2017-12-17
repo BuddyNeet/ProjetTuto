@@ -10,6 +10,7 @@ Lecteur lireLec(FILE *fe){
 	fgets(l.rue, 61, fe);
 	l.rue[strlen(l.rue)-1] = '\0';
 	fscanf(fe, "%s %s", &l.liste->cote, &l.liste->date);
+	l.liste->titre[strlen(l.liste->titre)-1] = '\0';
 	return l;
 }
 /*Lecture du fichier fe et retourne l'adresse de type Lecteur*/
@@ -58,20 +59,20 @@ void affichageLec(Lecteur **tLec, int n){
 	printf("\n");
 	for(i = 0; i < n; i++){
         printf("%s %s %s %s %s %s \n", tLec[i]->numLec, tLec[i]->nom, tLec[i]->prenom, tLec[i]->cp, tLec[i]->ville, tLec[i]->rue);
-        printf("%s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date);
+        printf("%s %s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date, tLec[i]->liste->titre);
 	}
 	printf("\n");
 }
 /*Affichage du tableau de pointeur contenant les adresses de type Lecteur*/
 
 /*Inscription d'un lecteur et retourne l'adresse du tableau*/
-Lecteur *InscriptionLec(Lecteur **tLec, int *n, int *tmax){
+/*Lecteur *InscriptionLec(Lecteur **tLec, int *n, int *tmax){
 	Lecteur l;
 	char res;
 
 	if (*n == *tmax){
-		tLec = (Lecteur*)realloc(tLec, 1+*tmax*sizeof(Lecteur));
-		if (tLec == NULL){
+		l = (Lecteur*)realloc(tLec, 1+*tmax*sizeof(Lecteur));
+		if (l == NULL){
 			exit (1);
 		} else {
 			printf("Saisir l'inscription Lecteur: \n");
@@ -86,7 +87,7 @@ Lecteur *InscriptionLec(Lecteur **tLec, int *n, int *tmax){
 			scanf("%s %s", &l.liste->cote, &l.liste->date);
 			*n += 1;
 			*tmax += 1;
-			return l;
+			return *l;
 			}
 		}
 	} else {
@@ -101,13 +102,50 @@ Lecteur *InscriptionLec(Lecteur **tLec, int *n, int *tmax){
 	printf("Saisir sous forme 'CXXX DD-MM-YYYY'\n");
 	scanf("%s %s", &l.liste->cote, &l.liste->date);
 	*n += 1;
-	return l;
+	return *l;
 		}
 	}
-}
+}*/
 /*Inscription d'un lecteur et retourne l'adresse du tableau*/
 
+/*Lecteur * InscriptionLec(int *tmax, int *n){
+	Lecteur *l;
+	int i;
+	if (*n == *tmax){
+			l=(Lecteur*)realloc((*tmax+1)*sizeof(Lecteur));
+		if (l == NULL) exit(1);
+		l = ecrireLec();
+	}
+	l = ecrireLec();
+	return l;
+}
 
+*/
+/*Lecteur ecrireLec(void){
+	Lecteur l;
+
+	printf("Saisir l'inscription Lecteur: \n");
+	scanf("%s %s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville, &l.rue);
+	printf("Saisir emprunt du lecteur: (Si existant écrire Y sinon écrire N ) \n");
+	scanf("%c", &res);
+	if (res  == 'N'){
+		l.liste->cote = ' ';
+		l.liste->date = ' ';
+	} else {
+	printf("Saisir sous forme 'CXXX DD-MM-YYYY'\n");
+	scanf("%s %s", &l.liste->cote, &l.liste->date);;
+	return l;
+	}
+}*/
+
+/*Nouvelle emprunt dans un lecteur existant*/
+/*Emprunt newEmprunt(Lecteur l){
+	Emprunt e;
+
+
+
+}*/
+/*Nouvelle emprunt dans un lecteur existant*/
 
 /*Fonction appellante*/
 void test(void){
@@ -122,9 +160,9 @@ void test(void){
 	}
 	affichageLec(tLec, n);
 
-	tLec = InscriptionLec(tLec, &n, &tmax);
+	/*tLec[n] = InscriptionLec(&n, &tmax);
 	affichageLec(tLec, n);
 
-    return;
+    return;*/
 }
 /*Fonction appellante*/

@@ -4,6 +4,7 @@
 typedef struct{
     char cote[10];
     char date[11];
+    char titre[50];
 }Emprunt;
 /*Structure de Emprunt*/
 
