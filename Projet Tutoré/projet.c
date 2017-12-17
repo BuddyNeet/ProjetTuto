@@ -6,12 +6,11 @@
 /*Lecture du fichier fe et retourne l'adresse de type Lecteur*/
 Lecteur lireLec(FILE *fe){
     Lecteur l;
+    
     fscanf(fe, " %s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville);
 	fgets(l.rue, 61, fe);
 	l.rue[strlen(l.rue)-1] = '\0';
 	fscanf(fe, "%s %s", &l.liste->cote, &l.liste->date);
-	fgets(l.liste->titre, 61, fe);
-	l.liste->titre[strlen(l.liste->titre)-1] = '\0';
 	return l;
 }
 /*Lecture du fichier fe et retourne l'adresse de type Lecteur*/
@@ -57,15 +56,36 @@ int chargementLecteur(char *nomFich, Lecteur **tLec, int tmax){
 /*Affichage du tableau de pointeur contenant les adresses de type Lecteur*/
 void affichageLec(Lecteur **tLec, int n){
 	int i;
+    
 	printf("\n");
 	for(i = 0; i < n; i++){
         printf("%s %s %s %s %s %s \n", tLec[i]->numLec, tLec[i]->nom, tLec[i]->prenom, tLec[i]->cp, tLec[i]->ville, tLec[i]->rue);
-        printf("%s %s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date, tLec[i]->liste->titre);
-        printf("%s", tLec[i]->liste->titre);
+        printf("%s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date);
 	}
 	printf("\n");
 }
 /*Affichage du tableau de pointeur contenant les adresses de type Lecteur*/
+
+/* Recherche dico */
+int rechDicoNom(Lecteur **tLec, int n, char *val){
+    int pos, m;
+    
+    if(n == 0)
+        return 0;
+    if(n == 1)
+        if(strcmp(val, tLec[0]->nom) >= 0)
+            return 0;
+        else
+            return 1;
+    m = (n-1)/2;
+    if(strcmp(val, tLec[m]->nom) >= 0){
+        pos = rechDicoNom(tLec, m+1, val);
+    }else{
+        pos = m+1+rechDicoNom(tLec+m+1, n-(m+1), val);
+    }
+    return pos;    
+}
+/* Recherche dico */
 
 /*Inscription d'un lecteur et retourne l'adresse du tableau*/
 /*Lecteur *InscriptionLec(Lecteur **tLec, int *n, int *tmax){
@@ -152,8 +172,8 @@ void affichageLec(Lecteur **tLec, int n){
 /*Fonction appellante*/
 void test(void){
 	Lecteur *tLec[50];
-	int n, tmax = 50;
-	char nomFichier[30]="lecteur.list";
+	int n, tmax = 50, pos = 14;
+	char nomFichier[30]="lecteur.list", valNom[30]="Estaing";
 
 	n = chargementLecteur(nomFichier, tLec, tmax);
 	if (n == -1){
@@ -161,6 +181,9 @@ void test(void){
 		return;
 	}
 	affichageLec(tLec, n);
+    
+    pos = rechDicoNom(tLec, n, valNom);
+    printf("Position de %s : %d \n", valNom, pos);
 
 	/*tLec[n] = InscriptionLec(&n, &tmax);
 	affichageLec(tLec, n);

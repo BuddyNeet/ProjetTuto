@@ -4,7 +4,6 @@
 typedef struct{
     char cote[10];
     char date[11];
-    char titre[50];
 }Emprunt;
 /*Structure de Emprunt*/
 
@@ -32,6 +31,7 @@ typedef struct{
 Lecteur lireLec(FILE *fe);
 int chargementLecteur(char *nomFich, Lecteur **tLec, int tmax);
 void affichageLec(Lecteur **tLec, int n);
+int rechDicoNom(Lecteur **tLec, int n, char *val);
 Lecteur * InscriptionLec(Lecteur **tLec, int *n, int *tmax);
 void test(void);
 /*Fonctions*/
