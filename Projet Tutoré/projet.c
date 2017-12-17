@@ -73,12 +73,12 @@ int rechDicoNom(Lecteur **tLec, int n, char *val){
     if(n == 0)
         return 0;
     if(n == 1)
-        if(strcmp(val, tLec[0]->nom) >= 0)
+        if(strcmp(val, tLec[0]->nom) <= 0)
             return 0;
         else
             return 1;
     m = (n-1)/2;
-    if(strcmp(val, tLec[m]->nom) >= 0){
+    if(strcmp(val, tLec[m]->nom) <= 0){
         pos = rechDicoNom(tLec, m+1, val);
     }else{
         pos = m+1+rechDicoNom(tLec+m+1, n-(m+1), val);
@@ -173,7 +173,7 @@ int rechDicoNom(Lecteur **tLec, int n, char *val){
 void test(void){
 	Lecteur *tLec[50];
 	int n, tmax = 50, pos = 14;
-	char nomFichier[30]="lecteur.list", valNom[30]="Estaing";
+	char nomFichier[30]="lecteur.list", valNom[30]="Descarte";
 
 	n = chargementLecteur(nomFichier, tLec, tmax);
 	if (n == -1){
