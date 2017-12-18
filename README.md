@@ -13,3 +13,16 @@
 * Enregistrement d'un nouvel emprunt
 * liste des lecteurs par ordre alphabétique(nom+prénom)
 * Sauvegarde des fichiers ( fic binaire )
+* Recherche dicotochose avec le prénom
+* Lecture ouvrage 
+* Chargement ouvrage
+* Affichage ouvrage ( pour debug) 
+
+## Bug list
+* quand on lie le fichier lecteur, le premier caractère n'est pas pris en compte
+
+## Truc qui marchent bien
+* Lire lecteur
+* Chargement lecteurs
+* Affichage lecteurs
+* Recherche dichotomique
