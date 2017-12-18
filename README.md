@@ -18,10 +18,10 @@
 * Chargement ouvrage
 * Affichage ouvrage ( pour debug) 
 
-## Bug list
+## Bug list:
 * quand on lie le fichier lecteur, le premier caractère n'est pas pris en compte
 
-## Truc qui marchent bien
+## Trucs qui marchent bien:
 * Lire lecteur
 * Chargement lecteurs
 * Affichage lecteurs
