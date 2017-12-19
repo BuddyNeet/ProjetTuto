@@ -98,29 +98,55 @@ void DecalerAD(Lecteur **tLec, int n, int pos){
 /**/
 
 /**/
-Lecteur* InscriptionLec(Lecteur **tLec, int *n, int *tmax){
-	int pos;
-	Lecteur l;
+int InscriptionLec(Lecteur **tLec, int n, int tmax){
+	int pos, i;
+	Lecteur *l;
+
+	l = (Lecteur*) malloc(sizeof(Lecteur)); //Allocation dynamique de Lecteur
+	if(l == NULL){
+		printf("Erreur malloc \n");
+		return -1;
+	}
+
+	// create fonction lecture depuis clavier pour mettre en paramètre d'entrée le pointeur de lecteur
 
 	printf("Entrez le numero Lecteur: \n");
 	scanf("%s", &l.numLec);
+	clearBuffer();
 	printf("Entrez le nom Lecteur: \n");
 	scanf("%s", &l.nom);
+	clearBuffer();
 	printf("Entrez le prenom Lecteur: \n");
 	scanf("%s", &l.prenom);
+	clearBuffer();
 	printf("Entrez le code postal du Lecteur: \n");
 	scanf("%s", &l.cp);
+	clearBuffer();
 	printf("Entrez la ville du Lecteur: \n");
-	scanf("%s", &l.ville);
+	scanf("%s", &l.ville);	
+	clearBuffer();
 	printf("Entrez la rue du Lecteur: \n");
 	fgets(l.rue, 61, stdin);
 	l.rue[strlen(l.rue)-1] = '\0';
 
-	for(i = 0; i < n; i++){
-    	printf("%s %s %s %s %s %s \n", l.numLec, l.nom, l.prenom, l.cp, l.ville, l.rue);
-	}
-	return tLec;
-	//pos = rechDicoNom(tLec, &n, l.nom);
+	pos = rechDicoNom(tLec, n, l.nom);
+
+	DecalerAD(tLec, n, pos);
+
+	tLec[pos] = l;
+
+
+
+	return n;
+   	//printf("%s %s %s %s %s %s \n", l.numLec, l.nom, l.prenom, l.cp, l.ville, l.rue);
+}
+/**/
+
+/**/
+void clearBuffer(void){
+	int c;
+
+	while((c = getchar()) != '\n' && c != EOF );
 
 }
 /**/
@@ -141,7 +167,9 @@ void test(void){
     /*pos = rechDicoNom(tLec, n, valNom);
     printf("Position de %s : %d \n", valNom, pos);*/
 
-	tLec = InscriptionLec(tLec, &n, &tmax);
+	n = InscriptionLec(tLec, n, tmax);
+
+	affichageLec(tLec, n);
 
 }
 /*Fonction appellante*/
