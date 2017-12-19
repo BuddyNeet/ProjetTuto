@@ -9,7 +9,7 @@
 
 ## A faire:
 * liste des lecteurs par ordre alphabétique(nom+prénom)
-* Sauvegarde des fichiers + Sauvegarde binaire( fic binaire )
+* Sauvegarde binaire( fic binaire )
 * Lecture ouvrage 
 * Chargement ouvrage
 * Affichage ouvrage (pour debug) 
@@ -27,3 +27,5 @@
 * Recherche dicotochomique avec le prénom
 * Suppresion Lecteur par le nom
 * Enregistrement d'un nouvel emprunt
+* Mise à jour des fichiers en cas d'ajouts
+* Prendre en compte les doublons dans les Insertions/Suppressions ( à moitié fait, j'ai réussi à gérer le pb des doublons mais je pense ya moyen de mieux faire, à voir )
