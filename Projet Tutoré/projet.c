@@ -87,15 +87,37 @@ int rechDicoNom(Lecteur **tLec, int n, char *val){
 }
 /* Recherche dico */
 
-/**/
+/* Recherche dico prénom */
+int rechDicoPrenom(Lecteur **tLec, int n, char *val){
+    int pos, m;
+    
+    if(n == 0)
+        return 0;
+    if(n == 1)
+        if(strcmp(val, tLec[0]->prenom) <= 0)
+            return 0;
+        else
+            return 1;
+    m = (n-1)/2;
+    if(strcmp(val, tLec[m]->prenom) <= 0){
+        pos = rechDicoNom(tLec, m+1, val);
+    }else{
+        pos = m+1+rechDicoNom(tLec+m+1, n-(m+1), val);
+    }
+    return pos;    
+}
+/* Recherche dico prénom */
+
+/*Decale à droite*/
 void DecalerAD(Lecteur **tLec, int n, int pos){
 	int i;
 
 	for(i=n-1; i>= pos; i--)
 		tLec[i+1] = tLec[i];
 }
+/*Decale à droite*/
 
-/**/
+/*Lis un lecteur au clavier*/
 Lecteur lireLec2(void){
     
     Lecteur l;
@@ -120,7 +142,9 @@ Lecteur lireLec2(void){
  
     return l;
 }
-/**/
+/*Lis un lecteur au clavier*/
+
+/*Inscrit un Lecteur et retourne la nouvelle taille logique du tableau*/
 int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
 	int pos, i;
 
@@ -141,16 +165,44 @@ int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
 	return n;
     
 }
-/**/
+/*Inscrit un Lecteur et retourne la nouvelle taille logique du tableau*/
 
 /**/
+int supprimeLec(Lecteur **tLec, int n){
+	int pos, answer, i;
+	char nom[30];
+	
+	printf("Saisir nom lecteur à supprimer: \n");
+	scanf("%s", &nom);
+	pos = rechDicoNom(tLec, n, nom);
+	if(strcmp(tLec[pos]->nom, nom) == 0){
+		printf("Voulez vous vraiment supprimer : %s %s ? \n", tLec[pos]->nom, tLec[pos]->prenom);
+		printf("Répondre par 0 ou 1 \n");
+		scanf("%d", &answer);
+		if(answer == 1){
+			for(i = pos; i < n-1 ; i++){
+				*tLec[i]=*tLec[i+1];
+			}
+			free(tLec[n-1]);
+			return n-1;
+		}else{
+			return n;
+		}
+	}else{
+		printf("La référence recherchée doesn't exist \n");
+	}
+
+}
+/**/
+
+/*Clear le buffer d'entrée standart*/
 void clearBuffer(void){
 	int c;
 
 	while((c = getchar()) != '\n' && c != EOF );
 
 }
-/**/
+/*Clear le buffer d'entrée standart*/
 
 /*Fonction appellante*/
 void test(void){
@@ -177,6 +229,9 @@ void test(void){
 	n = InscriptionLec(tLec, n, tmax, l);
     
     //printf("%s %s %s %s %s %s \n", l->numLec, l->nom, l->prenom, l->cp, l->ville, l->rue);
+	affichageLec(tLec, n);
+
+	n = supprimeLec(tLec, n);
 	affichageLec(tLec, n);
 
 }

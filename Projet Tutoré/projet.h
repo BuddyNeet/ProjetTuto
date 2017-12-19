@@ -35,5 +35,7 @@ void affichageLec(Lecteur **tLec, int n);
 int rechDicoNom(Lecteur **tLec, int n, char *val);
 int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l);
 void clearBuffer(void);
+int rechDicoPrenom(Lecteur **tLec, int n, char *val);
+int supprimeLec(Lecteur **tLec, int n);
 void test(void);
 /*Fonctions*/
