@@ -7,7 +7,7 @@
 Lecteur lireLec(FILE *fe){
     Lecteur l;
     
-    fscanf(fe, " %s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville);
+    fscanf(fe, "%s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville);
 	fgets(l.rue, 61, fe);
 	l.rue[strlen(l.rue)-1] = '\0';
 	fscanf(fe, "%s %s", &l.liste->cote, &l.liste->date);
@@ -87,87 +87,43 @@ int rechDicoNom(Lecteur **tLec, int n, char *val){
 }
 /* Recherche dico */
 
-/*Inscription d'un lecteur et retourne l'adresse du tableau*/
-/*Lecteur *InscriptionLec(Lecteur **tLec, int *n, int *tmax){
-	Lecteur l;
-	char res;
-
-	if (*n == *tmax){
-		l = (Lecteur*)realloc(tLec, 1+*tmax*sizeof(Lecteur));
-		if (l == NULL){
-			exit (1);
-		} else {
-			printf("Saisir l'inscription Lecteur: \n");
-			scanf("%s %s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville, &l.rue);
-			printf("Saisir emprunt du lecteur: (Si existant écrire Y sinon écrire N ) \n");
-			scanf("%c", &res);
-			if (res  == 'N'){
-				*l.liste->cote = ' ';
-				*l.liste->date = ' ';
-			} else {
-			printf("Saisir sous forme 'CXXX DD-MM-YYYY'\n");
-			scanf("%s %s", &l.liste->cote, &l.liste->date);
-			*n += 1;
-			*tmax += 1;
-			return *l;
-			}
-		}
-	} else {
-	printf("Saisir l'inscription Lecteur: \n");
-	scanf("%s %s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville, &l.rue);
-	printf("Saisir emprunt du lecteur: (Si existant écrire Y sinon écrire N ) \n");
-	scanf("%c", &res);
-		if (res  == 'N'){
-			*l.liste->cote = ' ';
-			*l.liste->date = ' ';
-		} else {
-	printf("Saisir sous forme 'CXXX DD-MM-YYYY'\n");
-	scanf("%s %s", &l.liste->cote, &l.liste->date);
-	*n += 1;
-	return *l;
-		}
-	}
-}*/
-/*Inscription d'un lecteur et retourne l'adresse du tableau*/
-
-/*Lecteur * InscriptionLec(int *tmax, int *n){
-	Lecteur *l;
+/**/
+void DecalerAD(Lecteur **tLec, int n, int pos){
 	int i;
-	if (*n == *tmax){
-			l=(Lecteur*)realloc((*tmax+1)*sizeof(Lecteur));
-		if (l == NULL) exit(1);
-		l = ecrireLec();
-	}
-	l = ecrireLec();
-	return l;
+
+	for(i=n-1; i>= pos; i--)
+		tLec[i+1] = tLec[i];
 }
 
-*/
-/*Lecteur ecrireLec(void){
+/**/
+
+/**/
+Lecteur* InscriptionLec(Lecteur **tLec, int *n, int *tmax){
+	int pos;
 	Lecteur l;
 
-	printf("Saisir l'inscription Lecteur: \n");
-	scanf("%s %s %s %s %s %s", &l.numLec, &l.nom, &l.prenom, &l.cp, &l.ville, &l.rue);
-	printf("Saisir emprunt du lecteur: (Si existant écrire Y sinon écrire N ) \n");
-	scanf("%c", &res);
-	if (res  == 'N'){
-		l.liste->cote = ' ';
-		l.liste->date = ' ';
-	} else {
-	printf("Saisir sous forme 'CXXX DD-MM-YYYY'\n");
-	scanf("%s %s", &l.liste->cote, &l.liste->date);;
-	return l;
+	printf("Entrez le numero Lecteur: \n");
+	scanf("%s", &l.numLec);
+	printf("Entrez le nom Lecteur: \n");
+	scanf("%s", &l.nom);
+	printf("Entrez le prenom Lecteur: \n");
+	scanf("%s", &l.prenom);
+	printf("Entrez le code postal du Lecteur: \n");
+	scanf("%s", &l.cp);
+	printf("Entrez la ville du Lecteur: \n");
+	scanf("%s", &l.ville);
+	printf("Entrez la rue du Lecteur: \n");
+	fgets(l.rue, 61, stdin);
+	l.rue[strlen(l.rue)-1] = '\0';
+
+	for(i = 0; i < n; i++){
+    	printf("%s %s %s %s %s %s \n", l.numLec, l.nom, l.prenom, l.cp, l.ville, l.rue);
 	}
-}*/
+	return tLec;
+	//pos = rechDicoNom(tLec, &n, l.nom);
 
-/*Nouvelle emprunt dans un lecteur existant*/
-/*Emprunt newEmprunt(Lecteur l){
-	Emprunt e;
-
-
-
-}*/
-/*Nouvelle emprunt dans un lecteur existant*/
+}
+/**/
 
 /*Fonction appellante*/
 void test(void){
@@ -182,12 +138,10 @@ void test(void){
 	}
 	affichageLec(tLec, n);
     
-    pos = rechDicoNom(tLec, n, valNom);
-    printf("Position de %s : %d \n", valNom, pos);
+    /*pos = rechDicoNom(tLec, n, valNom);
+    printf("Position de %s : %d \n", valNom, pos);*/
 
-	/*tLec[n] = InscriptionLec(&n, &tmax);
-	affichageLec(tLec, n);
+	tLec = InscriptionLec(tLec, &n, &tmax);
 
-    return;*/
 }
 /*Fonction appellante*/
