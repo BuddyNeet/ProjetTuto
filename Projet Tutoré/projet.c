@@ -169,46 +169,77 @@ int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
 
 /*Supprime un lecteur*/
 int supprimeLec(Lecteur **tLec, int n){
-	int pos, answer, i;
-	char nom[30];
+	int posN, posP, answer, i;
+	char nom[30], prenom[30];
 	
-	printf("Saisir nom lecteur à supprimer: \n");
-	scanf("%s", &nom);
-	pos = rechDicoNom(tLec, n, nom);
-	if(strcmp(tLec[pos]->nom, nom) == 0){
-		printf("Voulez vous vraiment supprimer : %s %s ? \n", tLec[pos]->nom, tLec[pos]->prenom);
-		printf("Répondre par 0 ou 1 \n");
-		scanf("%d", &answer);
-		if(answer == 1){
-			for(i = pos; i < n-1 ; i++){
-				*tLec[i]=*tLec[i+1];
+	printf("Saisir nom et prénom du lecteur à supprimer: \n");
+	scanf("%s %s", &nom, &prenom);
+	posN = rechDicoNom(tLec, n, nom);
+	posP = rechDicoPrenom(tLec, n, prenom);
+	if (posN == posP){
+
+		if((strcmp(tLec[posN]->nom, nom) == 0) && (strcmp(tLec[posP]->prenom, prenom) == 0)){
+			printf("Voulez vous vraiment supprimer : %s %s ? \n", tLec[posN]->nom, tLec[posP]->prenom);
+			printf("Répondre par 0(Non) ou 1(Oui) \n");
+			scanf("%d", &answer);
+			if(answer == 1){
+				for(i = posN; i < n-1 ; i++){
+					*tLec[i]=*tLec[i+1];
+				}
+				free(tLec[n-1]);
+				return n-1;
+			}else{
+				return n;
 			}
-			free(tLec[n-1]);
-			return n-1;
 		}else{
-			return n;
+			printf("La référence recherchée doesn't exist \n");
 		}
 	}else{
-		printf("La référence recherchée doesn't exist \n");
+		printf("N'existe pas dans la liste\n");
+		return n;
 	}
-
 }
 /*Supprime un lecteur*/
 
+/*Mise à jour dans un fichier intermédiaire*/
+void miseajour(Lecteur **tLec, int *n){
+	FILE *maj;
+	Lecteur a;
+	int i;
+
+	maj = fopen("lecteurMaJ.liste", "w");
+	if (maj == NULL) exit(1);
+	
+	for (int i = 0; i < *n; i++){
+		fprintf(maj, "%s %s %s %s %s %s \n", tLec[i]->numLec, tLec[i]->nom, tLec[i]->prenom, tLec[i]->cp, tLec[i]->ville, tLec[i]->rue );
+		fprintf(maj, "%s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date);
+	}
+
+	return;
+}
+/*Mise à jour dans un fichier intermédiaire*/
+
 /**/
 void ajoutEmprunt(Lecteur **tLec, int n){
-	char nom [30];
-	int pos;
+	char nom [30], prenom[30];
+	int posN, posP;
 
-	printf("Entrez le nom du lecteur auquel vous souhaitez ajouter un Emprunt\n");
-	scanf("%s", &nom);
+	printf("Entrez le nom et prénom du lecteur auquel vous souhaitez ajouter un Emprunt\n");
+	scanf("%s %s", &nom, &prenom);
 
-	pos = rechDicoNom(tLec, n, nom);
+	posN = rechDicoNom(tLec, n, nom);
+	posP = rechDicoNom(tLec, n, prenom);
 
-	printf("Ecrivez la référence de l'Emprunt: \n");
-	scanf("%s", &tLec[pos]->liste->cote);
-	printf("Ecrivez la date de type JJ-MM-AAAA: \n");
-	scanf("%s", &tLec[pos]->liste->date);
+	if (posN == posP){
+		printf("Ecrivez la référence de l'Emprunt: \n");
+		scanf("%s", &tLec[pos]->liste->cote);
+		printf("Ecrivez la date de type JJ-MM-AAAA: \n");
+		scanf("%s", &tLec[pos]->liste->date);
+		return;
+	}else{
+		printf("N'existe pas dans la liste\n");
+		return;
+	}
 
 }
 /**/
@@ -250,10 +281,11 @@ void test(void){
 	affichageLec(tLec, n);
 
 	ajoutEmprunt(tLec, n);
-	affichageLec(tLec, n);
+	//affichageLec(tLec, n);
+	miseajour(tLec, &n);
 
-	n = supprimeLec(tLec, n);
-	affichageLec(tLec, n);
+	//n = supprimeLec(tLec, n);
+	//affichageLec(tLec, n);
 
 }
 /*Fonction appellante*/
