@@ -167,7 +167,7 @@ int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
 }
 /*Inscrit un Lecteur et retourne la nouvelle taille logique du tableau*/
 
-/**/
+/*Supprime un lecteur*/
 int supprimeLec(Lecteur **tLec, int n){
 	int pos, answer, i;
 	char nom[30];
@@ -191,6 +191,24 @@ int supprimeLec(Lecteur **tLec, int n){
 	}else{
 		printf("La référence recherchée doesn't exist \n");
 	}
+
+}
+/*Supprime un lecteur*/
+
+/**/
+void ajoutEmprunt(Lecteur **tLec, int n){
+	char nom [30];
+	int pos;
+
+	printf("Entrez le nom du lecteur auquel vous souhaitez ajouter un Emprunt\n");
+	scanf("%s", &nom);
+
+	pos = rechDicoNom(tLec, n, nom);
+
+	printf("Ecrivez la référence de l'Emprunt: \n");
+	scanf("%s", &tLec[pos]->liste->cote);
+	printf("Ecrivez la date de type JJ-MM-AAAA: \n");
+	scanf("%s", &tLec[pos]->liste->date);
 
 }
 /**/
@@ -229,6 +247,9 @@ void test(void){
 	n = InscriptionLec(tLec, n, tmax, l);
     
     //printf("%s %s %s %s %s %s \n", l->numLec, l->nom, l->prenom, l->cp, l->ville, l->rue);
+	affichageLec(tLec, n);
+
+	ajoutEmprunt(tLec, n);
 	affichageLec(tLec, n);
 
 	n = supprimeLec(tLec, n);
