@@ -25,3 +25,4 @@
 * Chargement lecteurs
 * Affichage lecteurs
 * Recherche dichotomique
+* Insertion dans l'orde d'un nouveau lecteur
