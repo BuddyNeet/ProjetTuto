@@ -11,7 +11,6 @@
 * Enregistrement d'un nouvel emprunt
 * liste des lecteurs par ordre alphabétique(nom+prénom)
 * Sauvegarde des fichiers ( fic binaire )
-* Recherche dicotochose avec le prénom
 * Lecture ouvrage 
 * Chargement ouvrage
 * Affichage ouvrage ( pour debug) 
