@@ -29,10 +29,11 @@ typedef struct{
 
 /*Fonctions*/
 Lecteur lireLec(FILE *fe);
+Lecteur lireLec2(void);
 int chargementLecteur(char *nomFich, Lecteur **tLec, int tmax);
 void affichageLec(Lecteur **tLec, int n);
 int rechDicoNom(Lecteur **tLec, int n, char *val);
-int InscriptionLec(Lecteur **tLec, int n, int tmax);
+int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l);
 void clearBuffer(void);
 void test(void);
 /*Fonctions*/
