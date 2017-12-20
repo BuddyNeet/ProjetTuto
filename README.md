@@ -13,6 +13,7 @@
 
 ## Bug list:
 * quand on lie le fichier lecteur, le premier caractère n'est pas pris en compte
+* problème affichage dans le fichier majlist
 
 ## Trucs qui marchent bien:
 * Lire lecteur
