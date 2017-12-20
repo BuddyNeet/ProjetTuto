@@ -156,7 +156,7 @@ ListeLecteur insertionCroissante(ListeLecteur list, LecTag l){
 
 	if (list == NULL)
 		return insertionEnTete(list, l);
-	if (strcmp(l.numLec, list->l.numLec) <= 0)
+	if (strcmp(l.nom, list->l.nom) <= 0)
 		return insertionEnTete(list, l);
 
 	list->suivant = insertionCroissante(list->suivant, l);
@@ -175,9 +175,9 @@ ListeLecteur suppressionCroissante(ListeLecteur list, LecTag l){
 
 	if (list == NULL)
 		return list;
-	if (strcmp(l.numLec, list->l.numLec) <= 0)
+	if (strcmp(l.nom, list->l.nom) <= 0)
 		return list;
-	if (strcmp(l.numLec, list->l.numLec) == 0)
+	if (strcmp(l.nom, list->l.nom) == 0)
 		return supprimeListe(list);
 
 	list->suivant = suppressionCroissante(list->suivant, l);
@@ -425,12 +425,12 @@ void test(void){
 	}
 	affichageOuvrage(tOuv, n2);
 
-    /**l=lireLec2(tLec, &n);
-	n = InscriptionLec(tLec, n, tmax, l);*/
+    *l=lireLec2(tLec, &n);
+	n = InscriptionLec(tLec, n, tmax, l);
     
     
-	/*affichageLec(tLec, n);
-	miseajour(tLec, &n);*/
+	affichageLec(tLec, n);
+	//miseajour(tLec, &n);
 
 	//n = supprimeLec(tLec, n);
 
@@ -438,6 +438,8 @@ void test(void){
 
 	list = tabToList(tLec, n, list);
 
+	printf("\n");
 	afficherEnsemble(list);
+	printf("\n");
 }
 /*Fonction appellante*/
