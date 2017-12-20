@@ -8,7 +8,6 @@
 * BARLAND Estéban
 
 ## A faire:
-* liste des lecteurs par ordre alphabétique(nom+prénom)
 * Sauvegarde binaire( fic binaire )
 * Prendre en compte les doublons dans les Insertions/Suppressions (IMPORTANT)
 
@@ -29,3 +28,4 @@
 * Lecture ouvrage 
 * Chargement ouvrage
 * Affichage ouvrage (pour debug) 
+* liste des lecteurs par ordre alphabétique(nom+prénom)
