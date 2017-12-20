@@ -55,6 +55,7 @@ int rechDicoPrenom(Lecteur **tLec, int n, char *val);
 int supprimeLec(Lecteur **tLec, int n);
 void ajoutEmprunt(Lecteur **tLec, int n);
 void miseajour(Lecteur **tLec, int *n);
+ListeLecteur tabToList(Lecteur **tLec, int n, ListeLecteur list);
 /*Fonctions Lecturs*/
 
 /*Fonctions Ouvrages*/

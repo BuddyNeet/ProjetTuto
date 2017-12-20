@@ -382,12 +382,25 @@ void clearBuffer(void){
 }
 /*Clear le buffer d'entrée standart*/
 
+ListeLecteur tabToList(Lecteur **tLec, int n, ListeLecteur list){
+	int i;
+	for(i = 0; i < n; i++){
+		LecTag lec;
+		strcpy(lec.numLec, tLec[i]->numLec);
+		strcpy(lec.nom, tLec[i]->nom);
+		strcpy(lec.prenom, tLec[i]->prenom);
+		list = insertionCroissante(list, lec);
+	}
+	return list;
+}
+
 /*Fonction appellante*/
 void test(void){
 	Lecteur *tLec[50];
     Lecteur *l;
 	Ouvrage *tOuv[50];
     Ouvrage *o;
+    ListeLecteur list;
 	int n, tmax = 50, pos = 14, n2;
 	char nomFichier[30]="lecteur.list", valNom[30]="Descartes", nomFichierO[30]="ouvrage.list"; 
 
@@ -420,5 +433,11 @@ void test(void){
 	miseajour(tLec, &n);*/
 
 	//n = supprimeLec(tLec, n);
+
+	list = listeVide();
+
+	list = tabToList(tLec, n, list);
+
+	afficherEnsemble(list);
 }
 /*Fonction appellante*/
