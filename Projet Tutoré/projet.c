@@ -3,6 +3,8 @@
 #include <string.h>
 #include "projet.h"
 
+/*---- LECTEURS ----*/
+
 /*Lecture du fichier fe et retourne l'adresse de type Lecteur*/
 Lecteur lireLec(FILE *fe){
     Lecteur l;
@@ -66,6 +68,134 @@ void affichageLec(Lecteur **tLec, int n){
 }
 /*Affichage du tableau de pointeur contenant les adresses de type Lecteur*/
 
+/*---- LECTEURS ----*/
+
+/*---- OUVRAGES ----*/
+
+/*Lecture du fichier fe et retourne l'adresse de type Lecteur*/
+Ouvrage lire1Ouvrage(FILE *fe){
+    Ouvrage o;
+    
+    fscanf(fe, "%s", &o.cote);
+	fgets(o.titre, 31, fe);
+	o.titre[strlen(o.titre)-1] = '\0';
+	fscanf(fe, "%s", &o.categorie);
+	return o;
+}
+/*Lecture du fichier fe et retourne l'adresse de type Lecteur*/
+
+/*Chargement dans un tableau de pointeur les adresses de types Lecteur dans le fichier fe*/
+int chargementOuvrages(char *nomFich, Ouvrage **tOuv, int tmax){
+	FILE *fe;
+	Ouvrage *o;
+	int i = 0;
+
+	fe = fopen(nomFich, "r");
+	if(fe == NULL){
+		printf("Erreur ouverture fichier \n");
+		return -1;
+	}
+
+	o = (Ouvrage*) malloc(sizeof(Ouvrage)); //Allocation dynamique de Lecteur
+	if(o == NULL){
+		printf("Erreur malloc \n");
+		return -1;
+	}
+	*o = lire1Ouvrage(fe);
+
+	while(feof(fe)==0){						//Tant que fin de fichier
+		if(i == tmax){
+			printf("Erreur tables pleines \n");
+			return -1;
+		}
+		tOuv[i]=o;
+        o = (Ouvrage*) malloc(sizeof(Ouvrage));
+		if(o == NULL){
+			printf("Erreur malloc \n");
+			return -1;
+		}
+		*o = lire1Ouvrage(fe);
+		i++;
+	}
+	fclose(fe);
+	return i;
+}
+/*Chargement dans un tableau de pointeur les adresses de types Lecteur dans le fichier fe*/
+
+/*Affichage du tableau de pointeur contenant les adresses de type Lecteur*/
+void affichageOuvrage(Ouvrage **tOuv, int n){
+	int i;
+    
+	printf("\n");
+	for(i = 0; i < n; i++){
+        printf("%s %s %s \n", tOuv[i]->cote, tOuv[i]->titre, tOuv[i]->categorie);
+	}
+	printf("\n");
+}
+/*Affichage du tableau de pointeur contenant les adresses de type Lecteur*/
+
+/*---- OUVRAGES ----*/
+
+/*---- LECTEUR ORDRE ALPHABETIQUE----*/
+
+ListeLecteur listeVide(void){
+	return NULL;
+}
+
+ListeLecteur insertionEnTete(ListeLecteur list, LecTag l){
+	Maillon *x;
+
+	x = (Maillon*)malloc(sizeof(Maillon));
+	if (x == NULL) exit(1);
+	x->l = l;
+	x->suivant = list;
+	return x;
+}
+
+ListeLecteur insertionCroissante(ListeLecteur list, LecTag l){
+
+	if (list == NULL)
+		return insertionEnTete(list, l);
+	if (strcmp(l.numLec, list->l.numLec) <= 0)
+		return insertionEnTete(list, l);
+
+	list->suivant = insertionCroissante(list->suivant, l);
+	return list;
+}
+
+ListeLecteur supprimeListe(ListeLecteur list){
+	ListeLecteur x;
+
+	x = list->suivant;
+	free(list);
+	return x; //adresse nouvelle élément en tete de liste
+}
+
+ListeLecteur suppressionCroissante(ListeLecteur list, LecTag l){
+
+	if (list == NULL)
+		return list;
+	if (strcmp(l.numLec, list->l.numLec) <= 0)
+		return list;
+	if (strcmp(l.numLec, list->l.numLec) == 0)
+		return supprimeListe(list);
+
+	list->suivant = suppressionCroissante(list->suivant, l);
+	return list;
+
+}
+
+void afficherEnsemble(ListeLecteur list){
+	
+	if( list == NULL ) return;
+	
+    printf("%s %s %s \n", list->l.numLec, list->l.nom, list->l.prenom);
+	afficherEnsemble(list->suivant);
+	return;	
+}
+
+/*---- LECTEUR ORDRE ALPHABETIQUE----*/
+
 /* Recherche dico */
 int rechDicoNom(Lecteur **tLec, int n, char *val){
     int pos, m;
@@ -118,7 +248,7 @@ void DecalerAD(Lecteur **tLec, int n, int pos){
 /*Decale à droite*/
 
 /*Lis un lecteur au clavier*/
-Lecteur lireLec2(void){
+Lecteur lireLec2(Lecteur **tLec, int *n){
     
     Lecteur l;
     printf("Entrez le numero Lecteur: \n");
@@ -139,6 +269,7 @@ Lecteur lireLec2(void){
     printf("Entrez la rue du Lecteur: \n");
     fgets(l.rue, 61, stdin);
     l.rue[strlen(l.rue)-1] = '\0';
+    ajoutEmprunt(tLec, *n);
  
     return l;
 }
@@ -152,16 +283,14 @@ int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
     if( n== tmax) {
         printf( "table pleine \n");
         return -1;}
-	
 
-
-  
 	pos = rechDicoNom(tLec, n, l->nom);
 
 	DecalerAD(tLec, n, pos);
    
     tLec[pos]=l;
     n=n+1;
+
 	return n;
     
 }
@@ -232,9 +361,9 @@ void ajoutEmprunt(Lecteur **tLec, int n){
 
 	if (posN == posP){
 		printf("Ecrivez la référence de l'Emprunt: \n");
-		scanf("%s", &tLec[pos]->liste->cote);
+		scanf("%s", &tLec[posN]->liste->cote);
 		printf("Ecrivez la date de type JJ-MM-AAAA: \n");
-		scanf("%s", &tLec[pos]->liste->date);
+		scanf("%s", &tLec[posN]->liste->date);
 		return;
 	}else{
 		printf("N'existe pas dans la liste\n");
@@ -257,13 +386,16 @@ void clearBuffer(void){
 void test(void){
 	Lecteur *tLec[50];
     Lecteur *l;
+	Ouvrage *tOuv[50];
+    Ouvrage *o;
+	int n, tmax = 50, pos = 14, n2;
+	char nomFichier[30]="lecteur.list", valNom[30]="Descartes", nomFichierO[30]="ouvrage.list"; 
+
     l = (Lecteur*) malloc(sizeof(Lecteur)); //Allocation dynamique de Lecteur
     if(l == NULL){
         printf("Erreur malloc \n");
         return ;
     }
-	int n, tmax = 50, pos = 14;
-	char nomFichier[30]="lecteur.list", valNom[30]="Descarte";
 
 	n = chargementLecteur(nomFichier, tLec, tmax);
 	if (n == -1){
@@ -272,20 +404,21 @@ void test(void){
 	}
 	affichageLec(tLec, n);
     
-    /*pos = rechDicoNom(tLec, n, valNom);
-    printf("Position de %s : %d \n", valNom, pos);*/
-    *l=lireLec2();
-	n = InscriptionLec(tLec, n, tmax, l);
-    
-    //printf("%s %s %s %s %s %s \n", l->numLec, l->nom, l->prenom, l->cp, l->ville, l->rue);
-	affichageLec(tLec, n);
 
-	ajoutEmprunt(tLec, n);
-	//affichageLec(tLec, n);
-	miseajour(tLec, &n);
+	n2 = chargementOuvrages(nomFichierO, tOuv, tmax);
+	if (n2 == -1){
+		printf("Erreur fonction chargement \n");
+		return;
+	}
+	affichageOuvrage(tOuv, n2);
+
+    /**l=lireLec2(tLec, &n);
+	n = InscriptionLec(tLec, n, tmax, l);*/
+    
+    
+	/*affichageLec(tLec, n);
+	miseajour(tLec, &n);*/
 
 	//n = supprimeLec(tLec, n);
-	//affichageLec(tLec, n);
-
 }
 /*Fonction appellante*/
