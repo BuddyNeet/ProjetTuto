@@ -10,9 +10,6 @@
 ## A faire:
 * liste des lecteurs par ordre alphabétique(nom+prénom)
 * Sauvegarde binaire( fic binaire )
-* Lecture ouvrage 
-* Chargement ouvrage
-* Affichage ouvrage (pour debug) 
 * Prendre en compte les doublons dans les Insertions/Suppressions (IMPORTANT)
 
 ## Bug list:
@@ -29,3 +26,6 @@
 * Enregistrement d'un nouvel emprunt
 * Mise à jour des fichiers en cas d'ajouts
 * Prendre en compte les doublons dans les Insertions/Suppressions ( à moitié fait, j'ai réussi à gérer le pb des doublons mais je pense ya moyen de mieux faire, à voir )
+* Lecture ouvrage 
+* Chargement ouvrage
+* Affichage ouvrage (pour debug) 
