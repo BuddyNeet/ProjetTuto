@@ -10,6 +10,7 @@
 ## A faire:
 * Sauvegarde binaire( fic binaire )
 * Prendre en compte les doublons dans les Insertions/Suppressions (IMPORTANT)
+* Le menu !
 
 ## Bug list:
 * quand on lie le fichier lecteur, le premier caractère n'est pas pris en compte
