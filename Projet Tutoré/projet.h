@@ -43,7 +43,7 @@ typedef struct liste{
 }Maillon, *ListeLecteur;
 /*Structure de liste chainée pour Lecteur*/ 
 
-/*Fonctions Lecturs*/
+/*Fonctions Lecteurs*/
 Lecteur lireLec(FILE *fe);
 Lecteur lireLec2(Lecteur **tLec, int *n);
 int chargementLecteur(char *nomFich, Lecteur **tLec, int tmax);
@@ -56,7 +56,7 @@ int supprimeLec(Lecteur **tLec, int n);
 void ajoutEmprunt(Lecteur **tLec, int n);
 void miseajour(Lecteur **tLec, int *n);
 ListeLecteur tabToList(Lecteur **tLec, int n, ListeLecteur list);
-/*Fonctions Lecturs*/
+/*Fonctions Lecteurs*/
 
 /*Fonctions Ouvrages*/
 Ouvrage lire1Ouvrage(FILE *fe);
@@ -72,6 +72,11 @@ ListeLecteur supprimeListe(ListeLecteur list);
 ListeLecteur suppressionCroissante(ListeLecteur list, LecTag l);
 void afficherEnsemble(ListeLecteur list);
 /*Fonctions Lecteur ordre alphabétique*/
+
+/*Fonctions Menu*/
+void selectGui(int *val);
+void menu(Lecteur **tLec, int n);
+/*Fonctions Menu*/
 
 /*Fonction Test*/
 void test(void);

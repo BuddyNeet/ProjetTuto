@@ -62,7 +62,7 @@ void affichageLec(Lecteur **tLec, int n){
 	printf("\n");
 	for(i = 0; i < n; i++){
         printf("%s %s %s %s %s %s \n", tLec[i]->numLec, tLec[i]->nom, tLec[i]->prenom, tLec[i]->cp, tLec[i]->ville, tLec[i]->rue);
-        printf("%s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date);
+        printf("\t %s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date);
 	}
 	printf("\n");
 }
@@ -279,10 +279,10 @@ Lecteur lireLec2(Lecteur **tLec, int *n){
 int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
 	int pos, i;
 
-	// create fonction lecture depuis clavier pour mettre en paramètre d'entrée le pointeur de lecteur
-    if( n== tmax) {
+    if(n == tmax) {
         printf( "table pleine \n");
-        return -1;}
+        return -1;
+    }
 
 	pos = rechDicoNom(tLec, n, l->nom);
 
@@ -333,14 +333,13 @@ int supprimeLec(Lecteur **tLec, int n){
 /*Mise à jour dans un fichier intermédiaire*/
 void miseajour(Lecteur **tLec, int *n){
 	FILE *maj;
-	Lecteur a;
 	int i;
 
-	maj = fopen("lecteurMaJ.liste", "w");
+	maj = fopen("lecteurMaj.liste", "w");
 	if (maj == NULL) exit(1);
 	
 	for (int i = 0; i < *n; i++){
-		fprintf(maj, "%s %s %s %s %s %s \n", tLec[i]->numLec, tLec[i]->nom, tLec[i]->prenom, tLec[i]->cp, tLec[i]->ville, tLec[i]->rue );
+		fprintf(maj, "%s %s %s %s %s %s \n", tLec[i]->numLec, tLec[i]->nom, tLec[i]->prenom, tLec[i]->cp, tLec[i]->ville, tLec[i]->rue);
 		fprintf(maj, "%s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date);
 	}
 
@@ -350,7 +349,7 @@ void miseajour(Lecteur **tLec, int *n){
 
 /**/
 void ajoutEmprunt(Lecteur **tLec, int n){
-	char nom [30], prenom[30];
+	char nom[30], prenom[30];
 	int posN, posP;
 
 	printf("Entrez le nom et prénom du lecteur auquel vous souhaitez ajouter un Emprunt\n");
@@ -358,7 +357,10 @@ void ajoutEmprunt(Lecteur **tLec, int n){
 
 	posN = rechDicoNom(tLec, n, nom);
 	posP = rechDicoNom(tLec, n, prenom);
-
+    
+    printf("%d \n", posN);
+    printf("%d \n", posP);
+    
 	if (posN == posP){
 		printf("Ecrivez la référence de l'Emprunt: \n");
 		scanf("%s", &tLec[posN]->liste->cote);
@@ -394,10 +396,100 @@ ListeLecteur tabToList(Lecteur **tLec, int n, ListeLecteur list){
 	return list;
 }
 
+/*Menu de sélection*/
+void selectGui(int *val){
+    printf("\n");
+    printf("---- Menu de Séléction ----\n");
+    printf("\n");
+    printf("Choisir avec un chiffre \n");
+    printf("\n");
+    printf("1) Afficher la liste des lecteurs\n");
+    printf("2) Afficher la liste des ouvrages\n");
+    printf("3) Ajouter un lecteur\n");
+    printf("4) Ajouter un emprunt\n");
+    printf("5) Supprimer un lecteur\n");
+    printf("6) Mise à jour fichier lecteur\n");
+    printf("0) Quitter le programme\n");
+    printf("\n");
+    scanf("%d", val);
+}
+/*Menu de sélection*/
+
+/*Menu d'affichage*/
+void menu(Lecteur **tLec, int n){
+    Lecteur *l;
+	Ouvrage *tOuv[50];
+    Ouvrage *o;
+    ListeLecteur list;
+	int pos = 14, n2, val = 0, tmax = 50;
+	char valNom[30]="Descartes", nomFichierO[30]="ouvrage.list"; 
+    
+    l = (Lecteur*) malloc(sizeof(Lecteur)); //Allocation dynamique de Lecteur
+    if(l == NULL){
+        printf("Erreur malloc \n");
+        return ;
+    }
+    
+    selectGui(&val);
+    
+    if(val == 1){	
+        
+        affichageLec(tLec, n);
+        menu(tLec, n);
+    
+    }else if(val == 2){
+        
+        n2 = chargementOuvrages(nomFichierO, tOuv, tmax);
+        if (n2 == -1){
+            printf("Erreur fonction chargement \n");
+            return;
+        }
+        affichageOuvrage(tOuv, n2);
+        menu(tLec, n);
+        
+    }else if(val == 3){
+        
+        *l=lireLec2(tLec, &n);
+        n = InscriptionLec(tLec, n, tmax, l);
+        menu(tLec, n);
+        
+    }else if(val == 4){
+        
+        ajoutEmprunt(tLec, n);
+        menu(tLec, n);
+        
+    }else if(val == 5){
+        
+        n = supprimeLec(tLec, n);
+        menu(tLec, n);
+        
+    }else if(val == 6){
+        
+        printf("MAJ Faite dans le fichier lecteurMaj.list \n");
+        miseajour(tLec, &n);
+        menu(tLec, n);
+        
+    }else if(val == 0){
+        
+        printf("Vous avez quitté le programme. \n");
+        return;
+        
+    }else{
+        
+        printf("Valeur incorrecte\n");
+        menu(tLec, n);
+        
+    }
+    
+}
+/*Menu d'affichage*/
+
 /*Fonction appellante*/
 void test(void){
 	Lecteur *tLec[50];
-    Lecteur *l;
+    int n, tmax = 50;
+    char nomFichier[30]="lecteur.list";
+    /*Lecteur *l;
 	Ouvrage *tOuv[50];
     Ouvrage *o;
     ListeLecteur list;
@@ -408,9 +500,18 @@ void test(void){
     if(l == NULL){
         printf("Erreur malloc \n");
         return ;
+    }*/
+        
+    n = chargementLecteur(nomFichier, tLec, tmax);
+    if (n == -1){
+        printf("Erreur fonction chargement \n");
+        return;
     }
 
-	n = chargementLecteur(nomFichier, tLec, tmax);
+    menu(tLec, n);
+    
+    
+	/*n = chargementLecteur(nomFichier, tLec, tmax);
 	if (n == -1){
 		printf("Erreur fonction chargement \n");
 		return;
@@ -426,7 +527,7 @@ void test(void){
 	affichageOuvrage(tOuv, n2);
 
     *l=lireLec2(tLec, &n);
-	n = InscriptionLec(tLec, n, tmax, l);
+	//n = InscriptionLec(tLec, n, tmax, l);
     
     
 	affichageLec(tLec, n);
@@ -440,6 +541,6 @@ void test(void){
 
 	printf("\n");
 	afficherEnsemble(list);
-	printf("\n");
+	printf("\n");*/
 }
 /*Fonction appellante*/
