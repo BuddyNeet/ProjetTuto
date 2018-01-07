@@ -10,11 +10,10 @@
 ## A faire:
 * Sauvegarde binaire( fic binaire )
 * Prendre en compte les doublons dans les Insertions/Suppressions (IMPORTANT)
-* Le menu !
 
 ## Bug list:
-* quand on lie le fichier lecteur, le premier caractère n'est pas pris en compte
-* problème affichage dans le fichier majlist
+* problème avec ajout lecteur / suppression lecteur et ajout emprunt
+* mise à jour crampée
 
 ## Trucs qui marchent bien:
 * Lire lecteur
@@ -31,3 +30,4 @@
 * Chargement ouvrage
 * Affichage ouvrage (pour debug) 
 * liste des lecteurs par ordre alphabétique(nom+prénom)
+* Le menu
