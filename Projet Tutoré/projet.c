@@ -358,9 +358,6 @@ void ajoutEmprunt(Lecteur **tLec, int n){
 	posN = rechDicoNom(tLec, n, nom);
 	posP = rechDicoNom(tLec, n, prenom);
     
-    printf("%d \n", posN);
-    printf("%d \n", posP);
-    
 	if (posN == posP){
 		printf("Ecrivez la référence de l'Emprunt: \n");
 		scanf("%s", &tLec[posN]->liste->cote);
@@ -403,12 +400,14 @@ void selectGui(int *val){
     printf("\n");
     printf("Choisir avec un chiffre \n");
     printf("\n");
-    printf("1) Afficher la liste des lecteurs\n");
+    printf("1) Afficher la liste des lecteurs (détaillé)\n");
     printf("2) Afficher la liste des ouvrages\n");
     printf("3) Ajouter un lecteur\n");
     printf("4) Ajouter un emprunt\n");
     printf("5) Supprimer un lecteur\n");
     printf("6) Mise à jour fichier lecteur\n");
+    printf("7) Sauvegarde des fichiers (binaire)\n");
+    printf("8) Afficher la liste des lecteurs par ordre alphabétique (simpliste)\n");
     printf("0) Quitter le programme\n");
     printf("\n");
     scanf("%d", val);
@@ -467,6 +466,18 @@ void menu(Lecteur **tLec, int n){
         
         printf("MAJ Faite dans le fichier lecteurMaj.list \n");
         miseajour(tLec, &n);
+        menu(tLec, n);
+        
+    }else if(val == 7){
+        
+        printf("Sauvegarde des fichiers en développement \n");
+        menu(tLec, n);
+        
+    }else if(val == 8){
+        
+        list = listeVide();
+        list = tabToList(tLec, n, list);
+        afficherEnsemble(list);
         menu(tLec, n);
         
     }else if(val == 0){
