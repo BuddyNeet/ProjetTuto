@@ -230,13 +230,28 @@ int rechDicoPrenom(Lecteur **tLec, int n, char *val){
             return 1;
     m = (n-1)/2;
     if(strcmp(val, tLec[m]->prenom) <= 0){
-        pos = rechDicoNom(tLec, m+1, val);
+        pos = rechDicoPrenom(tLec, m+1, val);
     }else{
-        pos = m+1+rechDicoNom(tLec+m+1, n-(m+1), val);
+        pos = m+1+rechDicoPrenom(tLec+m+1, n-(m+1), val);
     }
     return pos;    
 }
 /* Recherche dico prénom */
+
+int rechSequentiel(Lecteur **tLec, int n, char *val, int *trouve){
+	int pos = 0, i;
+
+	for (i = 0; i < n; i++){
+		//AJOUTER  CONDITION POUR TROUVER LA POSITION MEME SI TROUVE = 0
+		if(strcmp(tLec[i]->nom, val) == 0){
+			pos = i;
+			*trouve = 1;
+			return pos;
+		}
+	}
+	*trouve = 0;
+	return pos;
+}
 
 /*Decale à droite*/
 void DecalerAD(Lecteur **tLec, int n, int pos){
@@ -277,20 +292,23 @@ Lecteur lireLec2(Lecteur **tLec, int *n){
 
 /*Inscrit un Lecteur et retourne la nouvelle taille logique du tableau*/
 int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
-	int pos, i;
+	int pos, i, *trouve;
 
     if(n == tmax) {
         printf( "table pleine \n");
         return -1;
     }
 
-	pos = rechDicoNom(tLec, n, l->nom);
+	pos = rechSequentiel(tLec, n, l->nom, &trouve);
 
-	DecalerAD(tLec, n, pos);
+	if(trouve == 1){
+		DecalerAD(tLec, n, pos);
    
-    tLec[pos]=l;
-    n=n+1;
-
+    	tLec[pos]=l;
+    	n=n+1;
+    	return n;
+    }
+    printf("ERROR: le lecteur n'existe pas\n");
 	return n;
     
 }
@@ -335,7 +353,7 @@ void miseajour(Lecteur **tLec, int *n){
 	FILE *maj;
 	int i;
 
-	maj = fopen("lecteurMaj.liste", "w");
+	maj = fopen("lecteur.list", "w");
 	if (maj == NULL) exit(1);
 	
 	for (int i = 0; i < *n; i++){
@@ -347,6 +365,21 @@ void miseajour(Lecteur **tLec, int *n){
 }
 /*Mise à jour dans un fichier intermédiaire*/
 
+void sauvegardeBin(Lecteur **tLec, int n, Ouvrage **o, int n2){
+	FILE *fb, *fbo;
+	fb = fopen("lecteurBin.backup","wb");
+	fbo = fopen("ouvrageBin.backup","wb");
+	if(fb == NULL) exit(1);
+	if(fbo == NULL) exit(2);
+	fwrite(&n, sizeof(int), 1, fb);
+	fwrite(tLec, sizeof(Lecteur), n, fb);
+	fclose(fb);
+	fwrite(&n2, sizeof(int), 1, fbo);
+	fwrite(o, sizeof(Ouvrage), n2, fbo);
+	fclose(fbo);
+}
+
+
 /**/
 void ajoutEmprunt(Lecteur **tLec, int n){
 	char nom[30], prenom[30];
@@ -356,18 +389,15 @@ void ajoutEmprunt(Lecteur **tLec, int n){
 	scanf("%s %s", &nom, &prenom);
 
 	posN = rechDicoNom(tLec, n, nom);
-	posP = rechDicoNom(tLec, n, prenom);
+	posP = rechDicoPrenom(tLec, n, prenom);
+	printf("%d \n", posN);
+	printf("%d \n", posP);
     
-	if (posN == posP){
-		printf("Ecrivez la référence de l'Emprunt: \n");
-		scanf("%s", &tLec[posN]->liste->cote);
-		printf("Ecrivez la date de type JJ-MM-AAAA: \n");
-		scanf("%s", &tLec[posN]->liste->date);
-		return;
-	}else{
-		printf("N'existe pas dans la liste\n");
-		return;
-	}
+	printf("Ecrivez la référence de l'Emprunt: \n");
+	scanf("%s", &tLec[posN]->liste->cote);
+	printf("Ecrivez la date de type JJ-MM-AAAA: \n");
+	scanf("%s", &tLec[posN]->liste->date);
+	return;
 
 }
 /**/
@@ -408,6 +438,7 @@ void selectGui(int *val){
     printf("6) Mise à jour fichier lecteur\n");
     printf("7) Sauvegarde des fichiers (binaire)\n");
     printf("8) Afficher la liste des lecteurs par ordre alphabétique (simpliste)\n");
+    printf("ç) LES TESTS\n");
     printf("0) Quitter le programme\n");
     printf("\n");
     scanf("%d", val);
@@ -420,8 +451,8 @@ void menu(Lecteur **tLec, int n){
 	Ouvrage *tOuv[50];
     Ouvrage *o;
     ListeLecteur list;
-	int pos = 14, n2, val = 0, tmax = 50;
-	char valNom[30]="Descartes", nomFichierO[30]="ouvrage.list"; 
+	int pos = 0, n2, val = 0, tmax = 50, trouve;
+	char valNom[30]="Descartes", nomFichierO[30]="ouvrage.list", rech[30]; 
     
     l = (Lecteur*) malloc(sizeof(Lecteur)); //Allocation dynamique de Lecteur
     if(l == NULL){
@@ -464,13 +495,13 @@ void menu(Lecteur **tLec, int n){
         
     }else if(val == 6){
         
-        printf("MAJ Faite dans le fichier lecteurMaj.list \n");
+        printf("MAJ Faite dans le fichier lecteur.list \n");
         miseajour(tLec, &n);
         menu(tLec, n);
         
     }else if(val == 7){
-        
-        printf("Sauvegarde des fichiers en développement \n");
+
+        sauvegardeBin(tLec, n, tOuv, n2);
         menu(tLec, n);
         
     }else if(val == 8){
@@ -478,6 +509,14 @@ void menu(Lecteur **tLec, int n){
         list = listeVide();
         list = tabToList(tLec, n, list);
         afficherEnsemble(list);
+        menu(tLec, n);
+        
+    }else if(val == 9){
+        
+        scanf("%s", rech);
+        pos = rechSequentiel(tLec, n, rech, &trouve);
+        printf("%d\n", pos);
+        printf("%d\n", trouve);
         menu(tLec, n);
         
     }else if(val == 0){

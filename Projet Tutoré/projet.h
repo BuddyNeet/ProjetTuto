@@ -52,10 +52,12 @@ int rechDicoNom(Lecteur **tLec, int n, char *val);
 int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l);
 void clearBuffer(void);
 int rechDicoPrenom(Lecteur **tLec, int n, char *val);
+int rechSequentiel(Lecteur **tLec, int n, char *val, int *trouve);
 int supprimeLec(Lecteur **tLec, int n);
 void ajoutEmprunt(Lecteur **tLec, int n);
 void miseajour(Lecteur **tLec, int *n);
 ListeLecteur tabToList(Lecteur **tLec, int n, ListeLecteur list);
+void sauvegardeBin(Lecteur **tLec, int n, Ouvrage **o, int n2);
 /*Fonctions Lecteurs*/
 
 /*Fonctions Ouvrages*/
