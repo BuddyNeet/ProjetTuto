@@ -8,12 +8,11 @@
 * BARLAND Estéban
 
 ## A faire:
-* Sauvegarde binaire( fic binaire )
-* Prendre en compte les doublons dans les Insertions/Suppressions (IMPORTANT)
+* Rech Séquentielle
+* Liste pour les emprunts
 
 ## Bug list:
 * problème avec ajout lecteur / suppression lecteur et ajout emprunt
-* mise à jour crampée
 
 ## Trucs qui marchent bien:
 * Lire lecteur
@@ -27,6 +26,7 @@
 * Mise à jour des fichiers en cas d'ajouts
 * Prendre en compte les doublons dans les Insertions/Suppressions ( à moitié fait, j'ai réussi à gérer le pb des doublons mais je pense ya moyen de mieux faire, à voir )
 * Lecture ouvrage 
+* Sauvegarde Binaire
 * Chargement ouvrage
 * Affichage ouvrage (pour debug) 
 * liste des lecteurs par ordre alphabétique(nom+prénom)
