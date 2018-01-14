@@ -239,18 +239,21 @@ int rechDicoPrenom(Lecteur **tLec, int n, char *val){
 /* Recherche dico prénom */
 
 int rechSequentiel(Lecteur **tLec, int n, char *val, int *trouve){
-	int pos = 0, i;
+	int i;
 
 	for (i = 0; i < n; i++){
 		//AJOUTER  CONDITION POUR TROUVER LA POSITION MEME SI TROUVE = 0
 		if(strcmp(tLec[i]->nom, val) == 0){
-			pos = i;
 			*trouve = 1;
-			return pos;
+			return i;
 		}
+        if(strcmp(val, tLec[i]->nom) < 0){
+            *trouve = 0;
+            return i;
+        }
 	}
 	*trouve = 0;
-	return pos;
+	return i;
 }
 
 /*Decale à droite*/
@@ -284,15 +287,13 @@ Lecteur lireLec2(Lecteur **tLec, int *n){
     printf("Entrez la rue du Lecteur: \n");
     fgets(l.rue, 61, stdin);
     l.rue[strlen(l.rue)-1] = '\0';
-    ajoutEmprunt(tLec, *n);
- 
     return l;
 }
 /*Lis un lecteur au clavier*/
 
 /*Inscrit un Lecteur et retourne la nouvelle taille logique du tableau*/
 int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
-	int pos, i, *trouve;
+	int pos, trouve;
 
     if(n == tmax) {
         printf( "table pleine \n");
@@ -301,14 +302,14 @@ int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
 
 	pos = rechSequentiel(tLec, n, l->nom, &trouve);
 
-	if(trouve == 1){
+	if(trouve == 0){
 		DecalerAD(tLec, n, pos);
    
     	tLec[pos]=l;
     	n=n+1;
     	return n;
     }
-    printf("ERROR: le lecteur n'existe pas\n");
+    printf("ERROR: le lecteur existe déjà\n");
 	return n;
     
 }
@@ -316,35 +317,30 @@ int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l){
 
 /*Supprime un lecteur*/
 int supprimeLec(Lecteur **tLec, int n){
-	int posN, posP, answer, i;
-	char nom[30], prenom[30];
+	int pos, answer, i, trouve;
+	char nom[30];
 	
-	printf("Saisir nom et prénom du lecteur à supprimer: \n");
-	scanf("%s %s", &nom, &prenom);
-	posN = rechDicoNom(tLec, n, nom);
-	posP = rechDicoPrenom(tLec, n, prenom);
-	if (posN == posP){
+	printf("Saisir nom du lecteur à supprimer: \n");
+	scanf("%s", &nom);
+	pos = rechSequentiel(tLec, n, nom, &trouve);
+    
+    if(trouve == 0){
+        printf("Le lecteur à supprimer n'existe pas \ns");
+        return n;
+    }
 
-		if((strcmp(tLec[posN]->nom, nom) == 0) && (strcmp(tLec[posP]->prenom, prenom) == 0)){
-			printf("Voulez vous vraiment supprimer : %s %s ? \n", tLec[posN]->nom, tLec[posP]->prenom);
-			printf("Répondre par 0(Non) ou 1(Oui) \n");
-			scanf("%d", &answer);
-			if(answer == 1){
-				for(i = posN; i < n-1 ; i++){
-					*tLec[i]=*tLec[i+1];
-				}
-				free(tLec[n-1]);
-				return n-1;
-			}else{
-				return n;
-			}
-		}else{
-			printf("La référence recherchée doesn't exist \n");
-		}
-	}else{
-		printf("N'existe pas dans la liste\n");
-		return n;
-	}
+    printf("Voulez vous vraiment supprimer : %s %s ? \n", tLec[pos]->nom, tLec[pos]->prenom);
+    printf("Répondre par 0(Non) ou 1(Oui) \n");
+    scanf("%d", &answer);
+    if(answer == 1){
+        for(i = pos; i < n-1 ; i++){
+            *tLec[i]=*tLec[i+1];
+        }
+        free(tLec[n-1]);
+        return n-1;
+    }else{
+        return n;
+    }
 }
 /*Supprime un lecteur*/
 
@@ -360,7 +356,7 @@ void miseajour(Lecteur **tLec, int *n){
 		fprintf(maj, "%s %s %s %s %s %s \n", tLec[i]->numLec, tLec[i]->nom, tLec[i]->prenom, tLec[i]->cp, tLec[i]->ville, tLec[i]->rue);
 		fprintf(maj, "%s %s \n", tLec[i]->liste->cote, tLec[i]->liste->date);
 	}
-
+    fclose(maj);
 	return;
 }
 /*Mise à jour dans un fichier intermédiaire*/
@@ -382,21 +378,26 @@ void sauvegardeBin(Lecteur **tLec, int n, Ouvrage **o, int n2){
 
 /**/
 void ajoutEmprunt(Lecteur **tLec, int n){
-	char nom[30], prenom[30];
-	int posN, posP;
+	char nom[30];
+	int pos, trouve;
 
-	printf("Entrez le nom et prénom du lecteur auquel vous souhaitez ajouter un Emprunt\n");
-	scanf("%s %s", &nom, &prenom);
+	printf("Entrez le nom du lecteur auquel vous souhaitez ajouter un Emprunt\n");
+	scanf("%s", &nom);
 
-	posN = rechDicoNom(tLec, n, nom);
-	posP = rechDicoPrenom(tLec, n, prenom);
-	printf("%d \n", posN);
-	printf("%d \n", posP);
+	pos = rechSequentiel(tLec, n, nom, &trouve);
+	
+	printf("%d \n", pos);
+	printf("%d \n", trouve);
+    
+    if(trouve == 0){
+        printf("Le lecteur n'existe pas\n");
+        return;
+    }
     
 	printf("Ecrivez la référence de l'Emprunt: \n");
-	scanf("%s", &tLec[posN]->liste->cote);
+	scanf("%s", &tLec[pos]->liste->cote);
 	printf("Ecrivez la date de type JJ-MM-AAAA: \n");
-	scanf("%s", &tLec[posN]->liste->date);
+	scanf("%s", &tLec[pos]->liste->date);
 	return;
 
 }
@@ -438,7 +439,6 @@ void selectGui(int *val){
     printf("6) Mise à jour fichier lecteur\n");
     printf("7) Sauvegarde des fichiers (binaire)\n");
     printf("8) Afficher la liste des lecteurs par ordre alphabétique (simpliste)\n");
-    printf("ç) LES TESTS\n");
     printf("0) Quitter le programme\n");
     printf("\n");
     scanf("%d", val);
@@ -451,7 +451,7 @@ void menu(Lecteur **tLec, int n){
 	Ouvrage *tOuv[50];
     Ouvrage *o;
     ListeLecteur list;
-	int pos = 0, n2, val = 0, tmax = 50, trouve;
+	int pos, n2, val = 0, tmax = 50, trouve;
 	char valNom[30]="Descartes", nomFichierO[30]="ouvrage.list", rech[30]; 
     
     l = (Lecteur*) malloc(sizeof(Lecteur)); //Allocation dynamique de Lecteur
@@ -481,6 +481,7 @@ void menu(Lecteur **tLec, int n){
         
         *l=lireLec2(tLec, &n);
         n = InscriptionLec(tLec, n, tmax, l);
+        ajoutEmprunt(tLec, n);
         menu(tLec, n);
         
     }else if(val == 4){
@@ -511,14 +512,6 @@ void menu(Lecteur **tLec, int n){
         afficherEnsemble(list);
         menu(tLec, n);
         
-    }else if(val == 9){
-        
-        scanf("%s", rech);
-        pos = rechSequentiel(tLec, n, rech, &trouve);
-        printf("%d\n", pos);
-        printf("%d\n", trouve);
-        menu(tLec, n);
-        
     }else if(val == 0){
         
         printf("Vous avez quitté le programme. \n");
@@ -539,18 +532,6 @@ void test(void){
 	Lecteur *tLec[50];
     int n, tmax = 50;
     char nomFichier[30]="lecteur.list";
-    /*Lecteur *l;
-	Ouvrage *tOuv[50];
-    Ouvrage *o;
-    ListeLecteur list;
-	int n, tmax = 50, pos = 14, n2;
-	char nomFichier[30]="lecteur.list", valNom[30]="Descartes", nomFichierO[30]="ouvrage.list"; 
-
-    l = (Lecteur*) malloc(sizeof(Lecteur)); //Allocation dynamique de Lecteur
-    if(l == NULL){
-        printf("Erreur malloc \n");
-        return ;
-    }*/
         
     n = chargementLecteur(nomFichier, tLec, tmax);
     if (n == -1){
@@ -559,38 +540,6 @@ void test(void){
     }
 
     menu(tLec, n);
-    
-    
-	/*n = chargementLecteur(nomFichier, tLec, tmax);
-	if (n == -1){
-		printf("Erreur fonction chargement \n");
-		return;
-	}
-	affichageLec(tLec, n);
-    
 
-	n2 = chargementOuvrages(nomFichierO, tOuv, tmax);
-	if (n2 == -1){
-		printf("Erreur fonction chargement \n");
-		return;
-	}
-	affichageOuvrage(tOuv, n2);
-
-    *l=lireLec2(tLec, &n);
-	//n = InscriptionLec(tLec, n, tmax, l);
-    
-    
-	affichageLec(tLec, n);
-	//miseajour(tLec, &n);
-
-	//n = supprimeLec(tLec, n);
-
-	list = listeVide();
-
-	list = tabToList(tLec, n, list);
-
-	printf("\n");
-	afficherEnsemble(list);
-	printf("\n");*/
 }
 /*Fonction appellante*/
