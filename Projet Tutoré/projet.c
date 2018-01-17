@@ -136,108 +136,7 @@ void affichageOuvrage(Ouvrage **tOuv, int n){
 
 /*---- OUVRAGES ----*/
 
-/*---- LECTEUR ORDRE ALPHABETIQUE----*/
-
-ListeLecteur listeVide(void){
-	return NULL;
-}
-
-ListeLecteur insertionEnTete(ListeLecteur list, LecTag l){
-	Maillon *x;
-
-	x = (Maillon*)malloc(sizeof(Maillon));
-	if (x == NULL) exit(1);
-	x->l = l;
-	x->suivant = list;
-	return x;
-}
-
-ListeLecteur insertionCroissante(ListeLecteur list, LecTag l){
-
-	if (list == NULL)
-		return insertionEnTete(list, l);
-	if (strcmp(l.nom, list->l.nom) <= 0)
-		return insertionEnTete(list, l);
-
-	list->suivant = insertionCroissante(list->suivant, l);
-	return list;
-}
-
-ListeLecteur supprimeListe(ListeLecteur list){
-	ListeLecteur x;
-
-	x = list->suivant;
-	free(list);
-	return x; //adresse nouvelle élément en tete de liste
-}
-
-ListeLecteur suppressionCroissante(ListeLecteur list, LecTag l){
-
-	if (list == NULL)
-		return list;
-	if (strcmp(l.nom, list->l.nom) <= 0)
-		return list;
-	if (strcmp(l.nom, list->l.nom) == 0)
-		return supprimeListe(list);
-
-	list->suivant = suppressionCroissante(list->suivant, l);
-	return list;
-
-}
-
-void afficherEnsemble(ListeLecteur list){
-	
-	if( list == NULL ) return;
-	
-    printf("%s %s %s \n", list->l.numLec, list->l.nom, list->l.prenom);
-	afficherEnsemble(list->suivant);
-	return;	
-}
-
-/*---- LECTEUR ORDRE ALPHABETIQUE----*/
-
-/* Recherche dico */
-int rechDicoNom(Lecteur **tLec, int n, char *val){
-    int pos, m;
-    
-    if(n == 0)
-        return 0;
-    if(n == 1)
-        if(strcmp(val, tLec[0]->nom) <= 0)
-            return 0;
-        else
-            return 1;
-    m = (n-1)/2;
-    if(strcmp(val, tLec[m]->nom) <= 0){
-        pos = rechDicoNom(tLec, m+1, val);
-    }else{
-        pos = m+1+rechDicoNom(tLec+m+1, n-(m+1), val);
-    }
-    return pos;    
-}
-/* Recherche dico */
-
-/* Recherche dico prénom */
-int rechDicoPrenom(Lecteur **tLec, int n, char *val){
-    int pos, m;
-    
-    if(n == 0)
-        return 0;
-    if(n == 1)
-        if(strcmp(val, tLec[0]->prenom) <= 0)
-            return 0;
-        else
-            return 1;
-    m = (n-1)/2;
-    if(strcmp(val, tLec[m]->prenom) <= 0){
-        pos = rechDicoPrenom(tLec, m+1, val);
-    }else{
-        pos = m+1+rechDicoPrenom(tLec+m+1, n-(m+1), val);
-    }
-    return pos;    
-}
-/* Recherche dico prénom */
-
+/*Recherche d"une chaîne de caractère avec confirmation de la recherche ( variable trouve )*/
 int rechSequentiel(Lecteur **tLec, int n, char *val, int *trouve){
 	int i;
 
@@ -255,6 +154,7 @@ int rechSequentiel(Lecteur **tLec, int n, char *val, int *trouve){
 	*trouve = 0;
 	return i;
 }
+/*Recherche d"une chaîne de caractère avec confirmation de la recherche ( variable trouve )*/
 
 /*Decale à droite*/
 void DecalerAD(Lecteur **tLec, int n, int pos){
@@ -361,6 +261,7 @@ void miseajour(Lecteur **tLec, int *n){
 }
 /*Mise à jour dans un fichier intermédiaire*/
 
+/*Sauvegarde des fichiers de données en binaire*/
 void sauvegardeBin(Lecteur **tLec, int n, Ouvrage **o, int n2){
 	FILE *fb, *fbo;
 	fb = fopen("lecteurBin.backup","wb");
@@ -374,9 +275,10 @@ void sauvegardeBin(Lecteur **tLec, int n, Ouvrage **o, int n2){
 	fwrite(o, sizeof(Ouvrage), n2, fbo);
 	fclose(fbo);
 }
+/*Sauvegarde des fichiers de données en binaire*/
 
 
-/**/
+/*Ajout d'emprunt à un lecteur*/
 void ajoutEmprunt(Lecteur **tLec, int n){
 	char nom[30];
 	int pos, trouve;
@@ -385,10 +287,6 @@ void ajoutEmprunt(Lecteur **tLec, int n){
 	scanf("%s", &nom);
 
 	pos = rechSequentiel(tLec, n, nom, &trouve);
-	
-	printf("%d \n", pos);
-	printf("%d \n", trouve);
-    
     if(trouve == 0){
         printf("Le lecteur n'existe pas\n");
         return;
@@ -401,28 +299,16 @@ void ajoutEmprunt(Lecteur **tLec, int n){
 	return;
 
 }
-/**/
+/*Ajout d'emprunt à un lecteur*/
 
-/*Clear le buffer d'entrée standart*/
+/*Clear le buffer d'entrée standard*/
 void clearBuffer(void){
 	int c;
 
 	while((c = getchar()) != '\n' && c != EOF );
 
 }
-/*Clear le buffer d'entrée standart*/
-
-ListeLecteur tabToList(Lecteur **tLec, int n, ListeLecteur list){
-	int i;
-	for(i = 0; i < n; i++){
-		LecTag lec;
-		strcpy(lec.numLec, tLec[i]->numLec);
-		strcpy(lec.nom, tLec[i]->nom);
-		strcpy(lec.prenom, tLec[i]->prenom);
-		list = insertionCroissante(list, lec);
-	}
-	return list;
-}
+/*Clear le buffer d'entrée standard*/
 
 /*Menu de sélection*/
 void selectGui(int *val){
@@ -431,28 +317,26 @@ void selectGui(int *val){
     printf("\n");
     printf("Choisir avec un chiffre \n");
     printf("\n");
-    printf("1) Afficher la liste des lecteurs (détaillé)\n");
+    printf("1) Afficher la liste des lecteurs\n");
     printf("2) Afficher la liste des ouvrages\n");
     printf("3) Ajouter un lecteur\n");
     printf("4) Ajouter un emprunt\n");
     printf("5) Supprimer un lecteur\n");
     printf("6) Mise à jour fichier lecteur\n");
     printf("7) Sauvegarde des fichiers (binaire)\n");
-    printf("8) Afficher la liste des lecteurs par ordre alphabétique (simpliste)\n");
     printf("0) Quitter le programme\n");
     printf("\n");
     scanf("%d", val);
 }
 /*Menu de sélection*/
 
-/*Menu d'affichage*/
+/*Menu*/
 void menu(Lecteur **tLec, int n){
     Lecteur *l;
 	Ouvrage *tOuv[50];
     Ouvrage *o;
-    ListeLecteur list;
 	int pos, n2, val = 0, tmax = 50, trouve;
-	char valNom[30]="Descartes", nomFichierO[30]="ouvrage.list", rech[30]; 
+	char nomFichierO[30]="ouvrage.list", rech[30]; 
     
     l = (Lecteur*) malloc(sizeof(Lecteur)); //Allocation dynamique de Lecteur
     if(l == NULL){
@@ -505,13 +389,6 @@ void menu(Lecteur **tLec, int n){
         sauvegardeBin(tLec, n, tOuv, n2);
         menu(tLec, n);
         
-    }else if(val == 8){
-        
-        list = listeVide();
-        list = tabToList(tLec, n, list);
-        afficherEnsemble(list);
-        menu(tLec, n);
-        
     }else if(val == 0){
         
         printf("Vous avez quitté le programme. \n");
@@ -525,7 +402,7 @@ void menu(Lecteur **tLec, int n){
     }
     
 }
-/*Menu d'affichage*/
+/*Menu*/
 
 /*Fonction appellante*/
 void test(void){

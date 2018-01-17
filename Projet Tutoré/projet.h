@@ -22,41 +22,23 @@ typedef struct{
 
 /*Structure d'Ouvrage*/
 typedef struct{
-    char cote[30];
+    char cote[10];
     char titre[30];
     char categorie[30];
 }Ouvrage;
 /*Structure d'Ouvrage*/
-
-/*Structure de Lecteur*/
-typedef struct{
-    char numLec[20];
-    char nom[30];
-    char prenom[30];
-}LecTag;
-/*Structure de Lecteur*/
-
-/*Structure de liste chainée pour Lecteur*/ 
-typedef struct liste{
-    LecTag l;
-    struct liste *suivant;    
-}Maillon, *ListeLecteur;
-/*Structure de liste chainée pour Lecteur*/ 
 
 /*Fonctions Lecteurs*/
 Lecteur lireLec(FILE *fe);
 Lecteur lireLec2(Lecteur **tLec, int *n);
 int chargementLecteur(char *nomFich, Lecteur **tLec, int tmax);
 void affichageLec(Lecteur **tLec, int n);
-int rechDicoNom(Lecteur **tLec, int n, char *val);
 int InscriptionLec(Lecteur **tLec, int n, int tmax, Lecteur *l);
 void clearBuffer(void);
-int rechDicoPrenom(Lecteur **tLec, int n, char *val);
 int rechSequentiel(Lecteur **tLec, int n, char *val, int *trouve);
 int supprimeLec(Lecteur **tLec, int n);
 void ajoutEmprunt(Lecteur **tLec, int n);
 void miseajour(Lecteur **tLec, int *n);
-ListeLecteur tabToList(Lecteur **tLec, int n, ListeLecteur list);
 void sauvegardeBin(Lecteur **tLec, int n, Ouvrage **o, int n2);
 /*Fonctions Lecteurs*/
 
@@ -66,15 +48,6 @@ int chargementOuvrages(char *nomFich, Ouvrage **tOuv, int tmax);
 void affichageOuvrage(Ouvrage **tOuv, int n);
 /*Fonctions Ouvrages*/
 
-/*Fonctions Lecteur ordre alphabétique*/
-ListeLecteur listeVide(void);
-ListeLecteur insertionEnTete(ListeLecteur list, LecTag l);
-ListeLecteur insertionCroissante(ListeLecteur list, LecTag l);
-ListeLecteur supprimeListe(ListeLecteur list);
-ListeLecteur suppressionCroissante(ListeLecteur list, LecTag l);
-void afficherEnsemble(ListeLecteur list);
-/*Fonctions Lecteur ordre alphabétique*/
-
 /*Fonctions Menu*/
 void selectGui(int *val);
 void menu(Lecteur **tLec, int n);
@@ -83,5 +56,3 @@ void menu(Lecteur **tLec, int n);
 /*Fonction Test*/
 void test(void);
 /*Fonction Test*/
-
-/*Fonctions*/
